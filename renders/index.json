@@ -1,0 +1,100 @@
+[
+ {
+  "src": "renders/01_aerial_sw.jpg",
+  "thumb": "renders/01_aerial_sw_thumb.jpg",
+  "caption": "The whole village from the south-west",
+  "w": 2048,
+  "h": 1152
+ },
+ {
+  "src": "renders/02_aerial_ne.jpg",
+  "thumb": "renders/02_aerial_ne_thumb.jpg",
+  "caption": "From the north-east, above the public road",
+  "w": 2048,
+  "h": 1152
+ },
+ {
+  "src": "renders/03_aerial_low_plot6.jpg",
+  "thumb": "renders/03_aerial_low_plot6_thumb.jpg",
+  "caption": "Plot 6 \u2014 three houses along the public road",
+  "w": 2048,
+  "h": 1152
+ },
+ {
+  "src": "renders/04_plot3_row.jpg",
+  "thumb": "renders/04_plot3_row_thumb.jpg",
+  "caption": "Plots 3 and 4 above the internal road",
+  "w": 2048,
+  "h": 1152
+ },
+ {
+  "src": "renders/05_house_front.jpg",
+  "thumb": "renders/05_house_front_thumb.jpg",
+  "caption": "The house \u2014 glazed south gable and covered veranda",
+  "w": 2048,
+  "h": 1152
+ },
+ {
+  "src": "renders/06_pool_evening.jpg",
+  "thumb": "renders/06_pool_evening_thumb.jpg",
+  "caption": "Green area \u2014 the pool",
+  "w": 2048,
+  "h": 1152
+ },
+ {
+  "src": "renders/07_paddle.jpg",
+  "thumb": "renders/07_paddle_thumb.jpg",
+  "caption": "Green area \u2014 the paddle-tennis court",
+  "w": 2048,
+  "h": 1152
+ },
+ {
+  "src": "renders/08_living_interior.jpg",
+  "thumb": "renders/08_living_interior_thumb.jpg",
+  "caption": "Living room \u2014 floating fireplace, wall TV, double height",
+  "w": 2048,
+  "h": 1152
+ },
+ {
+  "src": "renders/09_master_bedroom.jpg",
+  "thumb": "renders/09_master_bedroom_thumb.jpg",
+  "caption": "Master bedroom on the first floor",
+  "w": 2048,
+  "h": 1152
+ },
+ {
+  "src": "renders/10_dusk_street.jpg",
+  "thumb": "renders/10_dusk_street_thumb.jpg",
+  "caption": "Evening on the internal road \u2014 every house lit",
+  "w": 2048,
+  "h": 1152
+ },
+ {
+  "src": "renders/11_living_evening.jpg",
+  "thumb": "renders/11_living_evening_thumb.jpg",
+  "caption": "Living room at dusk",
+  "w": 2048,
+  "h": 1152
+ },
+ {
+  "src": "renders/12_version2_dining.jpg",
+  "thumb": "renders/12_version2_dining_thumb.jpg",
+  "caption": "Version 2 \u2014 the left room as a dining room",
+  "w": 2048,
+  "h": 1152
+ },
+ {
+  "src": "renders/13_version3_library.jpg",
+  "thumb": "renders/13_version3_library_thumb.jpg",
+  "caption": "Version 3 \u2014 the left room as a library and office",
+  "w": 2048,
+  "h": 1152
+ },
+ {
+  "src": "renders/14_plot2_front.jpg",
+  "thumb": "renders/14_plot2_front_thumb.jpg",
+  "caption": "Plot 2 \u2014 the access lane in front of the houses",
+  "w": 2048,
+  "h": 1152
+ }
+]

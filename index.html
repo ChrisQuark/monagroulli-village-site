@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Interactive 3D model of the Monagroulli laminated-log village, parcel 947, Limassol, Cyprus.">
+<meta name="theme-color" content="#14161a">
+<title>Monagroulli Log Village</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2314161a'/%3E%3Cpath d='M5 17 16 6l11 11h-3v10H8V17z' fill='%23d9a066'/%3E%3Cpath d='M16 6 5 17h22z' fill='%23767b82'/%3E%3Crect x='13' y='19' width='6' height='8' fill='%2314161a'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/style.css">
+<script type="importmap">
+{ "imports": { "three": "./js/vendor/three.module.min.js", "three/addons/": "./js/vendor/addons/" } }
+</script>
+</head>
+<body>
+
+<div id="viewer">
+  <canvas id="c" aria-label="3D model of the Monagroulli log village"></canvas>
+  <div id="labels" aria-hidden="true"></div>
+
+  <header id="topbar" class="panel">
+    <div class="brand" title="Monagroulli Log Village">
+      <svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><path d="M5 17 16 6l11 11h-3v10H8V17z" fill="#d9a066"/><path d="M16 6 5 17h22z" fill="#8a9098"/><rect x="13" y="19" width="6" height="8" fill="#14161a"/></svg>
+      <h1>Monagroulli <span class="lbl">Log Village</span></h1>
+    </div>
+
+    <div class="group modes" role="group" aria-label="View mode">
+      <button class="mode" data-mode="orbit" aria-pressed="true" title="Orbit (drag to rotate, scroll to zoom, right-drag to pan)">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><ellipse cx="12" cy="12" rx="9" ry="4" transform="rotate(-25 12 12)"/></svg><span class="lbl">Orbit</span>
+      </button>
+      <button class="mode" data-mode="bird" aria-pressed="false" title="Bird's eye (top-down / 45°)">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9c3-3 6-3 9 0 3-3 6-3 9 0M3 15c3-3 6-3 9 0 3-3 6-3 9 0"/></svg><span class="lbl">Bird's eye</span>
+      </button>
+      <button class="mode" data-mode="walk" aria-pressed="false" title="Walk (click to look, WASD to move, Shift to run)">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="13" cy="4" r="1.8"/><path d="M11 8l-3 5 3 1 1 8M11 8l4 2 2 4M11 8l-1 4-3 2M14 14l-2 3-4 4"/></svg><span class="lbl">Walk</span>
+      </button>
+      <div class="sub" id="birdsub" hidden>
+        <button data-bird="top" aria-pressed="true" title="Top-down">Top</button>
+        <button data-bird="45" aria-pressed="false" title="45° oblique">45°</button>
+      </div>
+    </div>
+
+    <div class="group">
+      <label class="sel" title="Camera presets">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>
+        <select id="preset" aria-label="Camera preset"><option value="">Preset…</option></select>
+        <select id="version" aria-label="House version" title="Ground-floor left room"><option value="1">Version 1 · bedroom</option><option value="2">Version 2 · dining room</option><option value="3">Version 3 · library / office</option></select>
+      </label>
+    </div>
+
+    <div class="group sun" title="Time of day (sun position, 15 June)">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/></svg>
+      <input id="sun" type="range" min="7" max="19" step="0.05" value="16.5" aria-label="Sun time">
+      <output id="suntime" for="sun">16:30</output>
+    </div>
+
+    <div class="group toggles" role="group" aria-label="Toggles">
+      <button id="tRoof" aria-pressed="true" title="Show / hide roofs">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12 12 4l9 8M6 10v9h12v-9"/></svg><span class="lbl">Roof</span>
+      </button>
+      <button id="tLabels" aria-pressed="true" title="Plot labels">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h11l5 6-5 6H4z"/><circle cx="8" cy="12" r="1.5"/></svg><span class="lbl">Labels</span>
+      </button>
+      <button id="tQuality" aria-pressed="true" title="Quality: high (4K shadows, full DPR) / low">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 18 9 9l4 6 3-4 4 7z"/><circle cx="17" cy="6" r="2"/></svg><span class="lbl" id="tQualityLbl">Quality</span>
+      </button>
+    </div>
+  </header>
+
+  <aside id="info" class="panel" hidden aria-live="polite">
+    <button class="close" id="infoClose" aria-label="Close">×</button>
+    <div class="eyebrow" id="infoPlot">Plot –</div>
+    <h2 id="infoName">House</h2>
+    <p id="infoSpec">78 m² footprint · 2 floors · 3 bedrooms · glulam spruce 30 cm logs · grey clay tiles</p>
+    <ul class="facts">
+      <li><b>9.40 × 8.30 m</b> external</li>
+      <li><b>Ground</b> living / kitchen, 2 bedrooms, bath, veranda</li>
+      <li><b>First</b> master bedroom + en-suite, gallery over the living room</li>
+      <li><b>Ridge</b> 8.24 m · 30° roof</li>
+    </ul>
+    <button class="btn" id="infoWalk">Walk to this house</button>
+  </aside>
+
+  <div id="compass" class="panel" title="North">
+    <svg viewBox="0 0 48 48" aria-hidden="true">
+      <circle cx="24" cy="24" r="21" class="ring"/>
+      <g id="needle">
+        <path d="M24 5 30 24 24 21 18 24z" class="n"/>
+        <path d="M24 43 18 24l6 3 6-3z" class="s"/>
+        <text x="24" y="14.5" text-anchor="middle">N</text>
+      </g>
+    </svg>
+  </div>
+
+  <div id="walkui" hidden>
+    <div id="joy" aria-hidden="true"><div id="joyknob"></div></div>
+    <button id="exitWalk" class="panel">Exit walk</button>
+    <div id="walkhint" class="panel">Click the view to look around · <b>W A S D</b> / arrows to move · <b>Shift</b> run · <b>Esc</b> release mouse</div>
+  </div>
+
+  <div id="hint" class="panel">Click a house for details</div>
+  <a id="more" class="panel" href="#about" aria-label="About the village">▾ About</a>
+
+  <div id="loading">
+    <div class="box">
+      <svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><path d="M5 17 16 6l11 11h-3v10H8V17z" fill="#d9a066"/><path d="M16 6 5 17h22z" fill="#8a9098"/><rect x="13" y="19" width="6" height="8" fill="#14161a"/></svg>
+      <div class="t">Loading the village</div>
+      <div class="bar"><div id="loadbar"></div></div>
+      <div class="p"><span id="loadpct">0</span>% <span id="loadmsg"></span></div>
+    </div>
+  </div>
+
+  <div id="webgl-error" hidden>
+    <div class="box">
+      <h2>WebGL is not available</h2>
+      <p>Your browser could not create a WebGL context, so the 3D model cannot be shown. Try a recent Chrome, Safari, Firefox or Edge with hardware acceleration enabled. The render gallery below still works.</p>
+    </div>
+  </div>
+</div>
+
+<section id="gallery" hidden>
+  <div class="wrap">
+    <h2>Renders</h2>
+    <p class="sub">Cycles path-traced stills of the village.</p>
+    <div class="grid" id="galleryGrid"></div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="wrap">
+    <h2>About the village</h2>
+    <div class="cols">
+      <div>
+        <p><b>24 laminated-log houses</b> on parcel 947, Monagroulli (Limassol district, Cyprus): six plots
+        on three flat terraces (plots 6 and 5 at the top, plots 3 and 4 in the middle, plots 1 and 2 with the green
+        area at the bottom, stone retaining walls between them), served by a new internal road, plus a green area with a 10 × 5 m swimming
+        pool by the road, a paddle-tennis court and a lawn with olive and cypress trees.</p>
+        <ul>
+          <li>Plot 1 · 1 044 m² · 3 houses</li>
+          <li>Plot 2 · 1 045 m² · 2 houses</li>
+          <li>Plot 3 · 1 250 m² · 2 houses</li>
+          <li>Plot 4 · 1 250 m² · 4 houses in a line</li>
+          <li>Plot 5 · 1 539 m² · 3 houses along the road</li>
+          <li>Plot 6 · 1 538 m² · 3 houses along the road</li>
+          <li>Green area · 857 m² · pool, paddle court, lawn (lowest terrace)</li>
+        </ul>
+      </div>
+      <div>
+        <p><b>One house, 24 times.</b> Every house is the owner's hand-drawn two-storey design: a 9.40 × 8.30 m
+        (78 m²) footprint, a double-height living room and kitchen opening onto a south veranda, two bedrooms
+        and a bathroom on the ground floor, and a master bedroom with en-suite and a gallery on the first floor
+        under a 30° roof.</p>
+        <p><b>Materials.</b> Walls of 30 cm glulam spruce logs with flat faces and classic crossed corners,
+        exposed glulam rafters and a pine-boarded ceiling, oak floors, a weathered timber deck, anthracite
+        aluminium windows, grey clay roof tiles on a 30° pitch, and concrete plinths on levelled pads.</p>
+      </div>
+    </div>
+    <p class="foot">Model built in Blender, shown with three.js. Use <b>Orbit</b> to look around,
+    <b>Bird's eye</b> for the site plan, <b>Walk</b> to step onto a veranda and into a house.</p>
+  </div>
+</section>
+
+<div id="lightbox" hidden role="dialog" aria-modal="true" aria-label="Render">
+  <button class="lb-close" aria-label="Close">×</button>
+  <button class="lb-prev" aria-label="Previous">‹</button>
+  <button class="lb-next" aria-label="Next">›</button>
+  <figure><img id="lbImg" alt=""><figcaption id="lbCap"></figcaption></figure>
+</div>
+
+<script type="module" src="js/app.js?v=9"></script>
+</body>
+</html>
